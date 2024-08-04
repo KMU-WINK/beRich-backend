@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -14,21 +15,36 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 public class SecurityConfig {
 	@Bean
-	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+
+		//csrf disable
 		http
-			.csrf(AbstractHttpConfigurer::disable) // csrf 보호 비활성화 => API 개발할 때만 사용하자
-			// 일단 모든 요청 허용 => 배포 할 때 수정
-			.authorizeHttpRequests(auth -> auth
-				.anyRequest().permitAll()
-			);
+			.csrf((auth) -> auth.disable());
+
+		http
+			.formLogin((auth) -> auth.disable());
+
+		http
+			.httpBasic((auth) -> auth.disable());
+
+		http
+			.authorizeHttpRequests((auth) -> auth
+				.requestMatchers("/auth/login", "/", "/auth/join").permitAll()
+				.requestMatchers("/admin").hasRole("ADMIN")
+				.anyRequest().authenticated());
+
+		// 세션 설정
+
+		http
+			.sessionManagement((session) -> session
+				.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+
 		return http.build();
 	}
 
-	// 비밀번호 암호화
+	// 비밀번호 암호화를 위해서
 	@Bean
-	public PasswordEncoder passwordEncoder() {
+	public BCryptPasswordEncoder bCryptPasswordEncoder() {
 		return new BCryptPasswordEncoder();
 	}
 }
-
-
