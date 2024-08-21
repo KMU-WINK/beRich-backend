@@ -3,7 +3,9 @@ package berich.backend.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -14,26 +16,28 @@ import org.springframework.security.web.SecurityFilterChain;
 // Spring Security 웹 보안 기능 활성화 => FilterChain 제공
 @EnableWebSecurity
 public class SecurityConfig {
+
+	@Bean
+	public WebSecurityCustomizer webSecurityCustomizer() {
+		return webSecurity -> webSecurity.ignoring()
+				.requestMatchers("/error");
+	}
+
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
-		//csrf disable
 		http
-			.csrf((auth) -> auth.disable());
+			.csrf(AbstractHttpConfigurer::disable) // csrf X
+			.formLogin(AbstractHttpConfigurer::disable) // Spring Security가 제공해주는 기본 로그인 사용 X
+			.httpBasic(AbstractHttpConfigurer::disable) // jwt 사용하므로 http 기본 인증 사용 X
 
-		http
-			.formLogin((auth) -> auth.disable());
-
-		http
-			.httpBasic((auth) -> auth.disable());
-
-		http
+			// URL 권한 설정
 			.authorizeHttpRequests((auth) -> auth
-				.requestMatchers("/auth/login", "/", "/auth/join").permitAll()
-				.requestMatchers("/admin").hasRole("ADMIN")
-				.anyRequest().authenticated());
+					.requestMatchers("api/auth/login", "/", "api/auth/join").permitAll()
+					.requestMatchers("/admin").hasRole("ADMIN")
+					.anyRequest().authenticated());
 
-		// 세션 설정
+		// 세션 설정 (토큰 방식은 필요 X)
 
 		http
 			.sessionManagement((session) -> session
