@@ -1,7 +1,11 @@
 package berich.backend.config;
 
+import berich.backend.jwt.LoginFilter;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -11,16 +15,25 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 // Spring Security 웹 보안 기능 활성화 => FilterChain 제공
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
+
+	private final AuthenticationConfiguration authenticationConfiguration;
 
 	@Bean
 	public WebSecurityCustomizer webSecurityCustomizer() {
 		return webSecurity -> webSecurity.ignoring()
 				.requestMatchers("/error");
+	}
+
+	@Bean
+	public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
+		return configuration.getAuthenticationManager();
 	}
 
 	@Bean
@@ -33,7 +46,7 @@ public class SecurityConfig {
 
 			// URL 권한 설정
 			.authorizeHttpRequests((auth) -> auth
-					.requestMatchers("api/auth/login", "/", "api/auth/join").permitAll()
+					.requestMatchers("/api/auth/login", "/api/setting/budget", "/api/auth/join").permitAll()
 					.requestMatchers("/admin").hasRole("ADMIN")
 					.anyRequest().authenticated());
 
@@ -42,6 +55,11 @@ public class SecurityConfig {
 		http
 			.sessionManagement((session) -> session
 				.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+
+		// 필터 등록
+
+		http.addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration)), UsernamePasswordAuthenticationFilter.class);
+
 
 		return http.build();
 	}

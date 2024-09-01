@@ -10,19 +10,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import berich.backend.dto.JoinDTO;
-import berich.backend.service.JoinService;
+import berich.backend.service.AuthService;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/auth")
 
-public class JoinController {
+public class AuthController {
 
-	private final JoinService joinService;
+	private final AuthService authService;
 
 	// 회원가입
 	@PostMapping("/join")
 	public ResponseEntity<UserEntity> JoinProcess(@RequestBody @Valid JoinDTO joinDto) {
-		return ResponseEntity.ok().body(joinService.saveUser(joinDto));
+		return ResponseEntity.ok().body(authService.saveUser(joinDto));
 	}
 }

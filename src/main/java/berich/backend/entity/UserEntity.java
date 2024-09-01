@@ -1,15 +1,9 @@
 package berich.backend.entity;
 
 import berich.backend.dto.JoinDTO;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Entity
@@ -40,12 +34,41 @@ public class UserEntity {
 	@Column(nullable = false)
 	private String role;
 
+	// 가계부 작성 포인트
+	@NotNull
+	@Column(nullable = false)
+	private Long point;
+
+	// 예산
+	@NotNull
+	@Column(nullable = false)
+	private Long budget;
+
+	// pet 레벨
+	@NotNull
+	@Column(nullable = false)
+	private int pet;
+
+	// 연속 작성일 수
+	@NotNull
+	@Column(nullable = false)
+	private Long day;
+
 	public static UserEntity createUser(@NotNull JoinDTO joinDTO, PasswordEncoder encoder) {
 		return UserEntity.builder()
 				.username(joinDTO.getUsername())
 				.password(encoder.encode(joinDTO.getPassword()))
 				.email(joinDTO.getEmail())
 				.role("ROLE_ADMIN")
+				.point(0L)
+				.budget(0L)
+				.pet(0)
+				.day(0L)
 				.build();
 	}
+
+	public void setBudget(Long budget) {
+		this.budget = budget;
+	}
+
 }
