@@ -8,10 +8,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.repository.Repository;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -21,8 +18,9 @@ public class SettingController {
     private final SettingService settingService;
 
     // 예산 수정
-    @PostMapping("/budget")
-    public ResponseEntity<UserEntity> BudgetSetting(@RequestBody @Valid BudgetDTO budgetDto) {
-        return ResponseEntity.ok().body(settingService.modifyBudget(budgetDto));
+    @PutMapping("/budget/{id}")
+    public ResponseEntity<UserEntity> BudgetSetting(@PathVariable("id") Long id, @RequestBody @Valid BudgetDTO budgetDto) {
+        System.out.println(id);
+        return ResponseEntity.ok().body(settingService.modifyBudget(id, budgetDto));
     }
 }

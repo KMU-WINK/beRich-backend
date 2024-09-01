@@ -18,8 +18,8 @@ public class SettingService {
 
     // 예산 수정
     @Transactional
-    public UserEntity modifyBudget(BudgetDTO budgetDto) {
-        UserEntity user = userRepository.findById(budgetDto.getId())
+    public UserEntity modifyBudget(Long id, BudgetDTO budgetDto) {
+        UserEntity user = userRepository.findById(id)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
         try {

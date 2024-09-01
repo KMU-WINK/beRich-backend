@@ -9,6 +9,4 @@ import berich.backend.entity.UserEntity;
 
 @Repository
 public interface UserRepository extends JpaRepository<UserEntity, Long>{
-
-	Boolean existsByEmail(String email);
 }

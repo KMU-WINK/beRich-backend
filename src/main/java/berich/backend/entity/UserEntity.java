@@ -19,7 +19,7 @@ public class UserEntity {
 	private Long id;
 
 	@NotNull // 객체 수준에서 null 값이 들어오는 것을 방지
-	@Column(length = 12, nullable=false) // 데이터베이스 수준에서 null 값이 들어가는 것을 방지
+	@Column(length = 12, nullable = false) // 데이터베이스 수준에서 null 값이 들어가는 것을 방지
 	private String username;
 
 	@NotNull
@@ -40,6 +40,7 @@ public class UserEntity {
 	private Long point;
 
 	// 예산
+	@Setter
 	@NotNull
 	@Column(nullable = false)
 	private Long budget;
@@ -66,9 +67,4 @@ public class UserEntity {
 				.day(0L)
 				.build();
 	}
-
-	public void setBudget(Long budget) {
-		this.budget = budget;
-	}
-
 }

@@ -26,10 +26,10 @@ public class BookEntity {
 
     @NotNull
     @Column(nullable = false)
-    private Long detail;
+    private String detail;
 
     @NotNull
     @Column(nullable = false)
-    private Long budget;
+    private Long cost;
 }
 
