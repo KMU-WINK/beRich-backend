@@ -18,7 +18,7 @@ public class SettingController {
     private final SettingService settingService;
 
     // 예산 수정
-    @PutMapping("/budget/{id}")
+    @PutMapping("/budget/{userId}")
     public ResponseEntity<UserEntity> BudgetSetting(@PathVariable("id") Long id, @RequestBody @Valid BudgetDTO budgetDto) {
         System.out.println(id);
         return ResponseEntity.ok().body(settingService.modifyBudget(id, budgetDto));

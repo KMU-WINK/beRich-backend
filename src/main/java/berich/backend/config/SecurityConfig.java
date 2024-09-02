@@ -46,7 +46,7 @@ public class SecurityConfig {
 
 			// URL 권한 설정
 			.authorizeHttpRequests((auth) -> auth
-					.requestMatchers("/api/auth/login", "/api/setting/budget/{id}", "/api/auth/join").permitAll()
+					.requestMatchers("/api/auth/login", "/api/setting/budget/{userId}", "/api/auth/join", "/api/book/write/{userId}", "/api/book/modify/{bookId}", "/api/book/delete/{bookId}", "/api/book/list/{userId}").permitAll()
 					.requestMatchers("/admin").hasRole("ADMIN")
 					.anyRequest().authenticated());
 

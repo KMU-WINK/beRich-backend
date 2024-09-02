@@ -25,9 +25,11 @@ public class AuthService {
     @Transactional
     public UserEntity saveUser(JoinDTO joinDto) {
         try {
+
             UserEntity user = UserEntity.createUser(joinDto, bCryptPasswordEncoder);
             userRepository.save(user);
             return user;
+
         } catch (DataIntegrityViolationException e) {
             throw new CustomException(ErrorCode.DUPLICATED_EMAIL);
         } catch (IllegalArgumentException e) {

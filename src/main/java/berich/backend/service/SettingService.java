@@ -23,7 +23,8 @@ public class SettingService {
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
         try {
-            user.setBudget(budgetDto.getBudget());
+            user.updateBudget(budgetDto.getBudget());
+            userRepository.save(user);
             return user;
         } catch (IllegalArgumentException e) {
             throw new CustomException(ErrorCode.INVALID_ARGUMENT);
