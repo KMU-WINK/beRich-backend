@@ -2,10 +2,12 @@ package berich.backend.service;
 
 import berich.backend.dto.BookDTO;
 import berich.backend.entity.BookEntity;
+import berich.backend.entity.BudgetEntity;
 import berich.backend.entity.UserEntity;
 import berich.backend.exception.CustomException;
 import berich.backend.exception.ErrorCode;
 import berich.backend.repository.BookRepository;
+import berich.backend.repository.BudgetRepository;
 import berich.backend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,18 +25,18 @@ public class BookService {
 
     private final UserRepository userRepository;
     private final BookRepository bookRepository;
+    private final BudgetRepository budgetRepository;
 
     // 가계부 작성
     @Transactional
     public BookEntity writeBook(Long id, BookDTO bookDTO) {
-        UserEntity user = userRepository.findById(id)
-                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+        BudgetEntity budget = budgetRepository.findById(id)
+                .orElseThrow(() -> new CustomException(ErrorCode.BUDGET_NOT_FOUND));
 
         try{
 
-            BookEntity book = BookEntity.createBook(bookDTO, user);
+            BookEntity book = BookEntity.createBook(bookDTO, budget);
             bookRepository.save(book);
-            System.out.println("book = " + book);
             return book;
 
         } catch(IllegalArgumentException e) {
@@ -44,9 +46,12 @@ public class BookService {
 
     // 가계부 수정
     @Transactional
-    public BookEntity modifyBook(Long id, BookDTO bookDTO) {
-        BookEntity book = bookRepository.findById(id)
+    public BookEntity modifyBook(Long bookId, Long userId, BookDTO bookDTO) {
+        BookEntity book = bookRepository.findById(bookId)
                 .orElseThrow(() -> new CustomException(ErrorCode.BOOK_NOT_FOUND));
+
+        UserEntity user = userRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
         try {
             book.updateBook(bookDTO);

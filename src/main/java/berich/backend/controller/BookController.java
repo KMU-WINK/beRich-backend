@@ -22,15 +22,15 @@ public class BookController {
     private final BookService bookService;
 
     // 가계부 작성
-    @PostMapping("/write/{userId}")
-    public ResponseEntity<BookEntity> writeBook(@PathVariable("userId") Long id, @RequestBody @Valid BookDTO bookDTO) {
+    @PostMapping("/write/{budgetId}")
+    public ResponseEntity<BookEntity> writeBook(@PathVariable("budgetId") Long id, @RequestBody @Valid BookDTO bookDTO) {
         return ResponseEntity.ok().body(bookService.writeBook(id, bookDTO));
     }
 
     // 가계부 수정
-    @PutMapping("/modify/{bookId}")
-    public ResponseEntity<BookEntity> modifyBook(@PathVariable("bookId") Long id, @RequestBody @Valid BookDTO bookDTO) {
-        return ResponseEntity.ok().body(bookService.modifyBook(id, bookDTO));
+    @PutMapping("/modify/{bookId}/{userId}")
+    public ResponseEntity<BookEntity> modifyBook(@PathVariable("bookId") Long bookId, @PathVariable("userID") Long userId, @RequestBody @Valid BookDTO bookDTO) {
+        return ResponseEntity.ok().body(bookService.modifyBook(bookId, userId, bookDTO));
     }
 
     // 가계부 삭제 (현재 달에 해당하는 가계부만 삭제 가능)

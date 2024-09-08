@@ -1,13 +1,8 @@
 package berich.backend.dto;
 
-import jakarta.persistence.Column;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.*;
 import lombok.Getter;
-import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
-
 import java.time.LocalDate;
 
 @Getter
@@ -27,6 +22,6 @@ public class BookDTO {
     private String detail;
 
     @NotNull
-    @Min(value = 0, message = "사용 금액은 양수로 설정해야함")
+    @PositiveOrZero(message = "금액은 0 이상이어야 함")
     private Long cost;
 }

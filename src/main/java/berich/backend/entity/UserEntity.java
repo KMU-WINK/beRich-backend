@@ -2,6 +2,7 @@ package berich.backend.entity;
 
 import berich.backend.dto.JoinDTO;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -18,19 +19,19 @@ public class UserEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull // 객체 수준에서 null 값이 들어오는 것을 방지
+    @NotBlank// 객체 수준에서 null 값이 들어오는 것을 방지
     @Column(length = 12, nullable = false) // 데이터베이스 수준에서 null 값이 들어가는 것을 방지
     private String username;
 
-    @NotNull
+    @NotBlank
     @Column(unique = true, nullable = false)
     private String email;
 
-    @NotNull
+    @NotBlank
     @Column(nullable = false)
     private String password;
 
-    @NotNull
+    @NotBlank
     @Column(nullable = false)
     private String role;
 
@@ -38,11 +39,6 @@ public class UserEntity {
     @NotNull
     @Column(nullable = false)
     private Long point;
-
-    // 예산
-    @NotNull
-    @Column(nullable = false)
-    private Long budget;
 
     // pet 레벨
     @NotNull
@@ -53,11 +49,6 @@ public class UserEntity {
     @Column
     private String petName;
 
-    // 연속 작성일 수
-    @NotNull
-    @Column(nullable = false)
-    private Long day;
-
     public static UserEntity createUser(@NotNull JoinDTO joinDTO, PasswordEncoder encoder) {
         return UserEntity.builder()
                 .username(joinDTO.getUsername())
@@ -65,14 +56,8 @@ public class UserEntity {
                 .email(joinDTO.getEmail())
                 .role("ROLE_ADMIN")
                 .point(0L)
-                .budget(0L)
                 .petLevel(0)
                 .petName("부자")
-                .day(0L)
                 .build();
-    }
-
-    public void updateBudget(Long budget) {
-        this.budget = budget;
     }
 }

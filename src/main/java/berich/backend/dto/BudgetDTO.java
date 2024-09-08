@@ -1,12 +1,20 @@
 package berich.backend.dto;
 
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.Getter;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import java.time.LocalDate;
+
 
 @Getter
 public class BudgetDTO {
     @NotNull
-    @Min(value = 0, message = "예산은 양수로 설정해야함")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate date;
+
+    @NotNull
+    @PositiveOrZero(message = "예산은 0 이상이어야 함")
     private Long budget;
 }

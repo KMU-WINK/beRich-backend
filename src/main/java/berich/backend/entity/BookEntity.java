@@ -2,6 +2,7 @@ package berich.backend.entity;
 
 import berich.backend.dto.BookDTO;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
@@ -23,20 +24,24 @@ public class BookEntity {
     @JoinColumn(name = "user_id", nullable = false)// 외래키 설정
     private UserEntity userEntity;
 
+    @ManyToOne // 단방향 관계 설정
+    @JoinColumn(name = "budget_id", nullable = false)// 외래키 설정
+    private BudgetEntity budgetEntity;
+
     @NotNull
     @Column(nullable = false)
     private LocalDate eventDate;
 
     // 수입 or 지출
-    @NotNull
+    @NotBlank
     @Column(nullable = false)
     private String type;
 
-    @NotNull
+    @NotBlank
     @Column(nullable = false)
     private String category;
 
-    @NotNull
+    @NotBlank
     @Column(nullable = false)
     private String detail;
 
@@ -45,14 +50,15 @@ public class BookEntity {
     private Long cost;
 
 
-    public static BookEntity createBook(@NotNull BookDTO bookDTO, UserEntity userEntity) {
+    public static BookEntity createBook(@NotNull BookDTO bookDTO, BudgetEntity budgetEntity) {
         return BookEntity.builder()
                 .eventDate(bookDTO.getEventDate())
                 .type(bookDTO.getType())
                 .category(bookDTO.getCategory())
                 .detail(bookDTO.getDetail())
                 .cost(bookDTO.getCost())
-                .userEntity(userEntity)
+                .budgetEntity(budgetEntity)
+                .userEntity(budgetEntity.getUserEntity())
                 .build();
     }
 
@@ -64,5 +70,7 @@ public class BookEntity {
         this.detail = bookDTO.getDetail();
         this.cost = bookDTO.getCost();
     }
+
+
 }
 

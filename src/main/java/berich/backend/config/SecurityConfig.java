@@ -53,7 +53,7 @@ public class SecurityConfig {
 
 		// URL 권한 설정
 			.authorizeHttpRequests((auth) -> auth
-					.requestMatchers("/api/auth/login", "/api/setting/budget/{userId}", "/api/auth/join", "/api/book/write/{userId}", "/api/book/modify/{bookId}", "/api/book/delete/{bookId}", "/api/book/list/{userId}").permitAll()
+					.requestMatchers("/api/auth/login", "/api/budget/{userId}", "/api/auth/join", "/api/book/write/{budgetId}", "/api/book/modify/{budgetId}", "/api/book/delete/{budgetId}", "/api/book/list/{budgetId}").permitAll()
 					.requestMatchers("/admin").hasRole("ADMIN")
 					.anyRequest().authenticated());
 
@@ -72,8 +72,8 @@ public class SecurityConfig {
 	}
 
 	@Bean
+	// 추후에 특정 도메인으로 cors 설정해줘야함 (인증정보 허용 - 로그인을 위해)
 	public CorsConfigurationSource corsConfigurationSource() {
-
 
 		CorsConfiguration configuration = new CorsConfiguration(); // CorsConfiguration 객체를 생성 -> Cors 설정
 		configuration.setAllowedOrigins(List.of("*")); // 허용할 Origin 설정 (도메인)
