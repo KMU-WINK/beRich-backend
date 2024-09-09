@@ -4,10 +4,8 @@ import berich.backend.dto.BookDTO;
 import berich.backend.entity.BookEntity;
 import berich.backend.service.BookService;
 import jakarta.validation.Valid;
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -23,20 +21,20 @@ public class BookController {
 
     // 가계부 작성
     @PostMapping("/write/{budgetId}")
-    public ResponseEntity<BookEntity> writeBook(@PathVariable("budgetId") Long id, @RequestBody @Valid BookDTO bookDTO) {
-        return ResponseEntity.ok().body(bookService.writeBook(id, bookDTO));
+    public ResponseEntity<BookEntity> writeBook(@PathVariable("budgetId") Long budgetId, @RequestBody @Valid BookDTO bookDTO) {
+        return ResponseEntity.ok().body(bookService.writeBook(budgetId, bookDTO));
     }
 
     // 가계부 수정
-    @PutMapping("/modify/{bookId}/{userId}")
-    public ResponseEntity<BookEntity> modifyBook(@PathVariable("bookId") Long bookId, @PathVariable("userID") Long userId, @RequestBody @Valid BookDTO bookDTO) {
-        return ResponseEntity.ok().body(bookService.modifyBook(bookId, userId, bookDTO));
+    @PutMapping("/modify/{bookId}")
+    public ResponseEntity<BookEntity> modifyBook(@PathVariable("bookId") Long bookId, @RequestBody @Valid BookDTO bookDTO) {
+        return ResponseEntity.ok().body(bookService.modifyBook(bookId, bookDTO));
     }
 
-    // 가계부 삭제 (현재 달에 해당하는 가계부만 삭제 가능)
+    // 가계부 삭제
     @DeleteMapping("/delete/{bookId}")
-    public ResponseEntity<BookEntity> deleteBook(@PathVariable("bookId") Long id) {
-        return ResponseEntity.ok().body(bookService.deleteBook(id));
+    public ResponseEntity<BookEntity> deleteBook(@PathVariable("bookId") Long bookId) {
+        return ResponseEntity.ok().body(bookService.deleteBook(bookId));
     }
 
     // 가계부 월별 조회 (해당 월에 해당하는 가계부 전체 조회)

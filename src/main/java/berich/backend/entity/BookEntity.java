@@ -64,7 +64,6 @@ public class BookEntity {
 
     // 가계부 수정
     public void updateBook(BookDTO bookDTO) {
-        this.eventDate = bookDTO.getEventDate();
         this.type = bookDTO.getType();
         this.category = bookDTO.getCategory();
         this.detail = bookDTO.getDetail();

@@ -29,12 +29,11 @@ public class BookService {
 
     // 가계부 작성
     @Transactional
-    public BookEntity writeBook(Long id, BookDTO bookDTO) {
-        BudgetEntity budget = budgetRepository.findById(id)
+    public BookEntity writeBook(Long budgetId, BookDTO bookDTO) {
+        BudgetEntity budget = budgetRepository.findById(budgetId)
                 .orElseThrow(() -> new CustomException(ErrorCode.BUDGET_NOT_FOUND));
 
         try{
-
             BookEntity book = BookEntity.createBook(bookDTO, budget);
             bookRepository.save(book);
             return book;
@@ -46,12 +45,9 @@ public class BookService {
 
     // 가계부 수정
     @Transactional
-    public BookEntity modifyBook(Long bookId, Long userId, BookDTO bookDTO) {
+    public BookEntity modifyBook(Long bookId, BookDTO bookDTO) {
         BookEntity book = bookRepository.findById(bookId)
                 .orElseThrow(() -> new CustomException(ErrorCode.BOOK_NOT_FOUND));
-
-        UserEntity user = userRepository.findById(userId)
-                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
         try {
             book.updateBook(bookDTO);
@@ -64,8 +60,8 @@ public class BookService {
 
     // 가계부 삭제
     @Transactional
-    public BookEntity deleteBook(Long id) {
-        BookEntity book = bookRepository.findById(id)
+    public BookEntity deleteBook(Long bookId) {
+        BookEntity book = bookRepository.findById(bookId)
                 .orElseThrow(() -> new CustomException(ErrorCode.BOOK_NOT_FOUND));
 
         try {
