@@ -31,5 +31,10 @@ public class BudgetController {
         return ResponseEntity.ok().body(budgetService.remainingBudget(budgetId));
     }
 
-    //@GetMapping("/")
+    //예산 정보 조회
+    @GetMapping("/budgetInfo/{userId}")
+    public ResponseEntity<BudgetEntity> budgetInfo(@PathVariable("userId") Long userId, @RequestParam("year") int year, @RequestParam("month") int month) {
+        return ResponseEntity.ok().body(budgetService.budgetInfo(userId, year, month));
+    }
+
 }

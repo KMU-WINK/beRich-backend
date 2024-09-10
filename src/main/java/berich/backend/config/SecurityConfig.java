@@ -53,7 +53,7 @@ public class SecurityConfig {
 
 		// URL 권한 설정
 			.authorizeHttpRequests((auth) -> auth
-					.requestMatchers("/api/auth/login", "/api/budget/{userId}", "/api/auth/join", "/api/book/write/{budgetId}", "/api/book/modify/{bookId}", "/api/book/delete/{bookId}", "/api/book/list/{bookId}","api/budget/remainingBudget/{budgetId}").permitAll()
+					.requestMatchers("/api/auth/login", "/api/budget/{userId}", "/api/auth/join", "/api/book/write/{budgetId}", "/api/book/modify/{bookId}", "/api/book/delete/{bookId}", "/api/book/list/{bookId}","api/budget/remainingBudget/{budgetId}", "/api/budget/budgetInfo/{userId}").permitAll()
 					.requestMatchers("/admin").hasRole("ADMIN")
 					.anyRequest().authenticated());
 

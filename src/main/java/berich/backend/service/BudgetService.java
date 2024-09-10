@@ -36,7 +36,8 @@ public class BudgetService {
 
             // 해당 날짜에 이미 예산이 존재하는 경우 수정 가능한지 판단하고 수정
             if(budgetRepository.existsByDateRange(user, startDate, endDate)){
-                BudgetEntity budget = budgetRepository.findByDateRange(user, startDate, endDate);
+                BudgetEntity budget = budgetRepository.findByDateRange(user, startDate, endDate)
+                .orElseThrow(() -> new CustomException(ErrorCode.BUDGET_NOT_FOUND));
 
                 if(budget.isModifiable()){
                     budget.updateBudget(budgetDto);
@@ -61,5 +62,17 @@ public class BudgetService {
                 .orElseThrow(() -> new CustomException(ErrorCode.BUDGET_NOT_FOUND));
 
         return budget.getRemainingBudget();
+    }
+
+    // 예산 정보 조회
+    public BudgetEntity budgetInfo(Long userId, int year, int month) {
+        UserEntity user = userRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+
+        LocalDate startDate = LocalDate.of(year, month, 1);
+        LocalDate endDate = startDate.plusMonths(1).minusDays(1);
+
+        return budgetRepository.findByDateRange(user, startDate, endDate)
+                .orElseThrow(() -> new CustomException(ErrorCode.BUDGET_NOT_FOUND));
     }
 }

@@ -116,7 +116,7 @@ public class BookService {
         UserEntity user = userRepository.findById(id)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
         try {
-            List<BookEntity> books = bookRepository.findByUserAndMonth(user, year, month); // 해당 user의 해당 월 가계부 조회
+            List<BookEntity> books = bookRepository.findByUserAndMonth(user, year, month);
 
             // 날짜별로 그룹화
             Map<LocalDate, List<BookEntity>> groupBooks = books.stream()
