@@ -42,4 +42,11 @@ public class BookController {
     public ResponseEntity<Map<LocalDate, List<BookEntity>>> listBook(@PathVariable("userId") Long id, @RequestParam("year") int year , @RequestParam("month") int month) {
         return ResponseEntity.ok().body(bookService.listBook(id, year, month));
     }
+
+    // 가계부 개별 조회
+    @GetMapping("/detail/{bookId}")
+    public ResponseEntity<BookEntity> detailBook(@PathVariable("bookId") Long bookId) {
+        return ResponseEntity.ok().body(bookService.detailBook(bookId));
+    }
+
 }

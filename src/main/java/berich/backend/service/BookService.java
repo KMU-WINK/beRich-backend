@@ -115,7 +115,7 @@ public class BookService {
     }
 
     // 가계부 월별 조회
-    @Transactional
+
     public Map<LocalDate, List<BookEntity>> listBook(Long id, int year, int month) {
         // 해당 user 없으면 예외처리
         UserEntity user = userRepository.findById(id)
@@ -133,4 +133,11 @@ public class BookService {
             throw new CustomException(ErrorCode.INVALID_ARGUMENT);
         }
     }
+
+    //가계부 id로 조회
+    public BookEntity detailBook(Long bookId) {
+        return bookRepository.findById(bookId)
+                .orElseThrow(() -> new CustomException(ErrorCode.BOOK_NOT_FOUND));
+    }
+
 }
