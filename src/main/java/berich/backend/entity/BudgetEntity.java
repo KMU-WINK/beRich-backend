@@ -66,7 +66,7 @@ public class BudgetEntity {
                 .budget(budgetDTO.getBudget())
                 .outlay(0L)
                 .income(0L)
-                .remainingBudget(0L)
+                .remainingBudget(budgetDTO.getBudget())
                 .isModifiable(true)
                 .userEntity(userEntity)
                 .build();
@@ -74,16 +74,28 @@ public class BudgetEntity {
 
     public void updateBudget(@NotNull BudgetDTO budgetDTO) {
         this.budget = budgetDTO.getBudget();
-        this.isModifiable = false;
+        this.remainingBudget = budgetDTO.getBudget() - this.outlay; // 예산 수정에 따른 남은 예산 수정
+        this.isModifiable = false; // 수정은 한 달에 한 번만 가능
     }
 
-    // budget 수정
-
     // outlay 수정
+    public void plusOutlay(Long cost) {
+        this.outlay += cost;
+        this.remainingBudget = this.budget - this.outlay;
+    }
+
+    public void minusOutlay(Long cost) {
+        this.outlay -= cost;
+        this.remainingBudget = this.budget + this.outlay;
+    }
 
     // income 수정
 
-    // remainingBudget 수정
+    public void plusIncome(Long cost) {
+        this.income += cost;
+    }
 
-    // isModifiable 수정
+    public void minusIncome(Long cost) {
+        this.income -= cost;
+    }
 }

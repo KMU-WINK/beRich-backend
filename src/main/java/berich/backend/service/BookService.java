@@ -36,6 +36,16 @@ public class BookService {
         try{
             BookEntity book = BookEntity.createBook(bookDTO, budget);
             bookRepository.save(book);
+
+            System.out.println(book.getType().getClass());
+
+            if("지출".equals(book.getType())) {
+                budget.plusOutlay(book.getCost());
+            } else if("수입".equals(book.getType())) {
+                budget.plusIncome(book.getCost());
+            } else {
+                throw new CustomException(ErrorCode.INVALID_ARGUMENT);
+            }
             return book;
 
         } catch(IllegalArgumentException e) {
@@ -49,7 +59,26 @@ public class BookService {
         BookEntity book = bookRepository.findById(bookId)
                 .orElseThrow(() -> new CustomException(ErrorCode.BOOK_NOT_FOUND));
 
+        BudgetEntity budget = book.getBudgetEntity();
+
         try {
+
+            if("지출".equals(book.getType()) & "지출".equals(bookDTO.getType())) {
+                budget.minusOutlay(book.getCost());
+                budget.plusOutlay(bookDTO.getCost());
+            } else if("지출".equals(book.getType()) & "수입".equals(bookDTO.getType())) {
+                budget.minusOutlay(book.getCost());
+                budget.plusIncome(bookDTO.getCost());
+            } else if("수입".equals(book.getType()) & "지출".equals(bookDTO.getType())) {
+                budget.minusIncome(book.getCost());
+                budget.plusOutlay(bookDTO.getCost());
+            } else if("수입".equals(book.getType()) & "수입".equals(bookDTO.getType())) {
+                budget.minusIncome(book.getCost());
+                budget.plusIncome(bookDTO.getCost());
+            } else {
+                throw new CustomException(ErrorCode.INVALID_ARGUMENT);
+            }
+
             book.updateBook(bookDTO);
             bookRepository.save(book);
             return book;
@@ -65,6 +94,14 @@ public class BookService {
                 .orElseThrow(() -> new CustomException(ErrorCode.BOOK_NOT_FOUND));
 
         try {
+            if("지출".equals(book.getType())) {
+                book.getBudgetEntity().minusOutlay(book.getCost());
+            } else if("수입".equals(book.getType())) {
+                book.getBudgetEntity().minusIncome(book.getCost());
+            } else {
+                throw new CustomException(ErrorCode.INVALID_ARGUMENT);
+            }
+
             bookRepository.delete(book);
             return book;
         } catch (IllegalArgumentException e) {

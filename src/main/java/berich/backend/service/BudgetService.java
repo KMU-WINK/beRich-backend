@@ -25,8 +25,8 @@ public class BudgetService {
 
     // 예산 추가
     @Transactional
-    public BudgetEntity modifyBudget(Long id, BudgetDTO budgetDto) {
-        UserEntity user = userRepository.findById(id)
+    public BudgetEntity modifyBudget(Long userId, BudgetDTO budgetDto) {
+        UserEntity user = userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
         try {
@@ -53,5 +53,13 @@ public class BudgetService {
         } catch (IllegalArgumentException e) {
             throw new CustomException(ErrorCode.INVALID_ARGUMENT);
         }
+    }
+
+    // 남은 예산 확인
+    public long remainingBudget (Long budgetId) {
+        BudgetEntity budget = budgetRepository.findById(budgetId)
+                .orElseThrow(() -> new CustomException(ErrorCode.BUDGET_NOT_FOUND));
+
+        return budget.getRemainingBudget();
     }
 }

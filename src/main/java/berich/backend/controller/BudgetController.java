@@ -2,7 +2,6 @@ package berich.backend.controller;
 
 import berich.backend.dto.BudgetDTO;
 import berich.backend.entity.BudgetEntity;
-import berich.backend.entity.UserEntity;
 import berich.backend.service.BudgetService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -25,5 +24,12 @@ public class BudgetController {
         return ResponseEntity.ok().body(budgetService.modifyBudget(id, budgetDto));
     }
 
-    //예산 현황 조회 ()
+    //예산 현황 조회 (-면 이번 달 예산 초과)
+
+    @GetMapping("/remainingBudget/{budgetId}")
+    public ResponseEntity<Long> remainingBudget(@PathVariable("budgetId") Long budgetId) {
+        return ResponseEntity.ok().body(budgetService.remainingBudget(budgetId));
+    }
+
+    //@GetMapping("/")
 }
