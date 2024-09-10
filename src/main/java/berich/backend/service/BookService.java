@@ -33,6 +33,11 @@ public class BookService {
         BudgetEntity budget = budgetRepository.findById(budgetId)
                 .orElseThrow(() -> new CustomException(ErrorCode.BUDGET_NOT_FOUND));
 
+        // 예산의 년, 월과 작성할 가계부의 년, 월이 다르면 예외처리
+        if(budget.getDate().getYear() != bookDTO.getEventDate().getYear() || budget.getDate().getMonth() != bookDTO.getEventDate().getMonth()) {
+            throw new CustomException(ErrorCode.BUDGET_ID_NOT_CORRECT);
+        }
+
         try{
             BookEntity book = BookEntity.createBook(bookDTO, budget);
             bookRepository.save(book);
